@@ -29,7 +29,7 @@ export default class Row extends Component {
                 username: userInfo.login.username,
                 email: userInfo.email
             }
-        })
+        });
     }
 
     selectContact(index) {

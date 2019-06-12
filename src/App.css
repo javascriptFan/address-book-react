@@ -3,8 +3,16 @@
 }
 
 .app-header {
+  z-index: 20;
+  background: white;
+  width: 100%;
+  position: fixed;
+  top: 0;
   text-align: center;
-  margin: 20px auto;
+  padding: 20px 20%;
+}
+
+.app-header-title {
   font-size: 20px;
   font-weight: bold;
 }
@@ -20,6 +28,8 @@
 
 .address-body {
   border: 1px solid #cccccc;
+  margin-top: 160px;
+  margin-bottom: 50px;
 }
 
 .modal-row {
@@ -47,4 +57,8 @@
 .search-bar input {
   display: inline-block;
   width: 50%;
+}
+
+.loader {
+  margin: 20px auto;
 }

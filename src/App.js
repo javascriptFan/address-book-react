@@ -3,6 +3,8 @@ import Row from './components/Row';
 import Modal from 'react-responsive-modal';
 import ModalContent from './components/ModalContent';
 import SearchBar from './components/SearchBar';
+import $ from 'jquery';
+import ReactLoading from 'react-loading';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -16,11 +18,11 @@ class App extends React.Component {
       searchString: '',
       loading: false,
       error: false,
+      message: '',
       showModal: false,
       selectedContact: 0
     }
 
-    this.onSearch = this.onSearch.bind(this);
     this.nextUsers = this.nextUsers.bind(this);
     this.selectContact = this.selectContact.bind(this);
     this.onCloseModal = this.onCloseModal.bind(this);
@@ -32,14 +34,19 @@ class App extends React.Component {
     this.nextUsers();
   }
 
+  componentDidMount() {
+    var that = this;
+    $(document).on('scroll', function() {
+      if($(document).height() - $(document).scrollTop() - $(window).height() < 50) {
+          that.nextUsers();
+      }
+    });
+  }
+
   onCloseModal() {
     this.setState({
       showModal: false
     });
-  }
-
-  onSearch(searchString) {
-
   }
 
   nextUsers() {
@@ -57,7 +64,8 @@ class App extends React.Component {
           console.log('Fetch error - ', json.error);
           this.setState({
             loading: false,
-            error: true
+            error: true,
+            message: json.error
           });
 
           return;
@@ -67,9 +75,16 @@ class App extends React.Component {
         this.setState({
           users: newUsers,
           filterUsers: this.filterByString(newUsers, searchString),
-          loading: false
+          loading: false,
+          error: false
         });
       });
+    } else {
+      this.setState({
+        error: true,
+        message: 'End of Users Catalog',
+        loading: false
+      })
     }
   }
 
@@ -97,12 +112,13 @@ class App extends React.Component {
   }
 
   render() {
-    const { filterUsers, loading, error, showModal, selectedContact, searchString } = this.state;
-    console.log(filterUsers);
+    const { filterUsers, loading, error, message, showModal, selectedContact, searchString } = this.state;
     return (
       <div className="App">
-        <div className="container app-header">Address Book</div>
-        <SearchBar updateSearch={this.updateSearch} searchString={searchString} />
+        <div className="app-header">
+          <div className="app-header-title">Address Book</div>
+          <SearchBar updateSearch={this.updateSearch} searchString={searchString} />
+        </div>
         <div className="container address-body">
           { filterUsers.map((user, index) => (
             <Row userInfo={user} index={index + 1} selectContact={this.selectContact}/>
@@ -113,6 +129,13 @@ class App extends React.Component {
             <ModalContent userInfo={filterUsers[selectedContact]} />
           </Modal>
         ): (null)
+        }
+        { (loading)?(
+            <ReactLoading className="loader" type="spin" color="#238F92" height={'50px'} width={'50px'} />
+        ): (null)}
+        { (error)?(
+            <div className="container warning">{message}</div>
+          ): (null)
         }
       </div>
     );
