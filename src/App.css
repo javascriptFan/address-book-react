@@ -21,3 +21,17 @@
 .address-body {
   border: 1px solid #cccccc;
 }
+
+.modal-row {
+  margin-bottom: 20px;
+  margin-right: 15px;
+  border-bottom: 1px solid #dddddd;
+}
+
+.modal-row label {
+  margin-right: 20px;
+}
+
+.modal-thumbnail {
+  margin-top: 20px;
+}

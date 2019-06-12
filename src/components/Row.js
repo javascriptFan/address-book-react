@@ -14,12 +14,18 @@ export default class Row extends Component {
                 email: userInfo.email
             }
         };
+
+        this.selectContact = this.selectContact.bind(this);
+    }
+
+    selectContact(index) {
+        this.props.selectContact(index);
     }
 
     render() {
         const { userInfo } = this.state;
         return(
-            <div className="row address-row">
+            <div className="row address-row" onClick={e => this.selectContact(userInfo.no)}>
                 <div className="col-md-1">{userInfo.no}</div>
                 <div className="col-md-3"><img src={userInfo.thumbnail} /></div>
                 <div className="col-md-3">{userInfo.first} {userInfo.last}</div>

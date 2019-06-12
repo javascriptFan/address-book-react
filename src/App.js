@@ -1,5 +1,7 @@
 import React from 'react';
 import Row from './components/Row';
+import Modal from 'react-responsive-modal';
+import ModalContent from './components/ModalContent';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -11,15 +13,25 @@ class App extends React.Component {
       users: [],
       searchString: '',
       loading: false,
-      error: false
+      error: false,
+      showModal: false,
+      selectedContact: 0
     }
 
     this.onSearch = this.onSearch.bind(this);
     this.nextUsers = this.nextUsers.bind(this);
+    this.selectContact = this.selectContact.bind(this);
+    this.onCloseModal = this.onCloseModal.bind(this);
   }
 
   componentWillMount() {
     this.nextUsers();
+  }
+
+  onCloseModal() {
+    this.setState({
+      showModal: false
+    });
   }
 
   onSearch(searchString) {
@@ -56,16 +68,29 @@ class App extends React.Component {
     }
   }
 
+  selectContact(index) {
+    this.setState({
+      showModal: true,
+      selectedContact: index
+    });
+  }
+
   render() {
-    const { users, loading, error } = this.state;
+    const { users, loading, error, showModal, selectedContact } = this.state;
     return (
       <div className="App">
         <div className="container app-header">Address Book</div>
         <div className="container address-body">
           { users.map((user, index) => (
-            <Row userInfo={user} index={index} />
+            <Row userInfo={user} index={index + 1} selectContact={this.selectContact}/>
           ))}
         </div>
+        { (users.length > 0)?(
+          <Modal open={showModal} onClose={this.onCloseModal} >
+            <ModalContent userInfo={users[selectedContact]} />
+          </Modal>
+        ): (null)
+        }
       </div>
     );
   }
