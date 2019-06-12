@@ -3,14 +3,15 @@ import React, { Component } from 'react';
 export default class Row extends Component {
     constructor(props) {
         super(props);
+        var userInfo = props.userInfo;
         this.state = {
             userInfo: {
-                no: 0,
-                thumbnail: '',
-                first: 'asdf',
-                last: 'qewrqwer',
-                username: 'asdfa',
-                email: 'asdf@asdf.com'
+                no: props.index,
+                thumbnail: userInfo.picture.thumbnail,
+                first: userInfo.name.first,
+                last: userInfo.name.last,
+                username: userInfo.login.username,
+                email: userInfo.email
             }
         };
     }
