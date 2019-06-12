@@ -18,6 +18,20 @@ export default class Row extends Component {
         this.selectContact = this.selectContact.bind(this);
     }
 
+    componentWillReceiveProps(props) {
+        var userInfo = props.userInfo;
+        this.setState({
+            userInfo: {
+                no: props.index,
+                thumbnail: userInfo.picture.thumbnail,
+                first: userInfo.name.first,
+                last: userInfo.name.last,
+                username: userInfo.login.username,
+                email: userInfo.email
+            }
+        })
+    }
+
     selectContact(index) {
         this.props.selectContact(index);
     }

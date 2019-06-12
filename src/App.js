@@ -2,6 +2,7 @@ import React from 'react';
 import Row from './components/Row';
 import Modal from 'react-responsive-modal';
 import ModalContent from './components/ModalContent';
+import SearchBar from './components/SearchBar';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -11,6 +12,7 @@ class App extends React.Component {
 
     this.state = {
       users: [],
+      filterUsers: [],
       searchString: '',
       loading: false,
       error: false,
@@ -22,6 +24,8 @@ class App extends React.Component {
     this.nextUsers = this.nextUsers.bind(this);
     this.selectContact = this.selectContact.bind(this);
     this.onCloseModal = this.onCloseModal.bind(this);
+    this.updateSearch = this.updateSearch.bind(this);
+    this.filterByString = this.filterByString.bind(this);
   }
 
   componentWillMount() {
@@ -43,7 +47,7 @@ class App extends React.Component {
       loading: true
     });
 
-    var { users } = this.state;
+    var { users, searchString } = this.state;
 
     if(users.length < 1000) {
       fetch('https://randomuser.me/api/?results=50')
@@ -62,10 +66,19 @@ class App extends React.Component {
         var newUsers = users.concat(additionalUsers);
         this.setState({
           users: newUsers,
+          filterUsers: this.filterByString(newUsers, searchString),
           loading: false
         });
       });
     }
+  }
+
+  filterByString(users, string) {
+    return users.filter(el => {
+      if(el.name.first.indexOf(string) > -1 || el.name.last.indexOf(string) > -1) {
+        return el;
+      }
+    });
   }
 
   selectContact(index) {
@@ -75,19 +88,29 @@ class App extends React.Component {
     });
   }
 
+  updateSearch(string) {
+    const { users } = this.state;
+    this.setState({
+      searchString: string,
+      filterUsers: this.filterByString(users, string)
+    });
+  }
+
   render() {
-    const { users, loading, error, showModal, selectedContact } = this.state;
+    const { filterUsers, loading, error, showModal, selectedContact, searchString } = this.state;
+    console.log(filterUsers);
     return (
       <div className="App">
         <div className="container app-header">Address Book</div>
+        <SearchBar updateSearch={this.updateSearch} searchString={searchString} />
         <div className="container address-body">
-          { users.map((user, index) => (
+          { filterUsers.map((user, index) => (
             <Row userInfo={user} index={index + 1} selectContact={this.selectContact}/>
           ))}
         </div>
-        { (users.length > 0)?(
+        { (filterUsers.length > 0)?(
           <Modal open={showModal} onClose={this.onCloseModal} >
-            <ModalContent userInfo={users[selectedContact]} />
+            <ModalContent userInfo={filterUsers[selectedContact]} />
           </Modal>
         ): (null)
         }

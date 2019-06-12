@@ -35,3 +35,16 @@
 .modal-thumbnail {
   margin-top: 20px;
 }
+
+.search-bar {
+  margin: 20px auto;
+}
+
+.search-bar label {
+  margin-right: 30px;
+}
+
+.search-bar input {
+  display: inline-block;
+  width: 50%;
+}
