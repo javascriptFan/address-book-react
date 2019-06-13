@@ -17,6 +17,10 @@
   font-weight: bold;
 }
 
+.app-header-setting {
+  float: right;
+}
+
 .address-row {
   border-bottom: 1px solid #dddddd;
 }
